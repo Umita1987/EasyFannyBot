@@ -1,2 +1,3 @@
 # TanyaFan_bot - my first project om Python
-# Бот для телеграмм с двумя кнопками, который отправляет при нажатии на соответствубщую кнопку(Анекдот или Мем) присылает анекдот или мем
+# Description
+  Two-button telegram bot that sends when you click the corresponding button(Anecdote or Meme) sends an anecdote or meme
