@@ -6,6 +6,8 @@ import requests
 import telebot
 from bs4 import BeautifulSoup as b
 from telebot import types
+from dotenv import load_dotenv
+
 
 # cтраница сайта, которую будет парсить
 url = "https://anekdoty.ru/pro-programmistov/"
@@ -26,9 +28,10 @@ path_dir = "C:\\Users\\Fujitsu\\OneDrive\\Desktop\\Мемы"
 # получаем список мемов в папке
 image_files = os.listdir(path_dir)
 # получаем токен в BotFather
-API_KEY = "6395157421:AAGGQWl5AVJEqIADBBlETeO5D1UCZYql_xI"
+
+load_dotenv()
 # Создаем бот
-bot = telebot.TeleBot(API_KEY)
+bot = telebot.TeleBot(os.getenv("TOKEN"))
 
 
 # создаем клавиатуру (кнопки) и преветственное сообщение
