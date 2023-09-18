@@ -1,4 +1,3 @@
-
 import os
 import random
 
@@ -7,7 +6,6 @@ import telebot
 from bs4 import BeautifulSoup as b
 from telebot import types
 from dotenv import load_dotenv
-
 
 # cтраница сайта, которую будет парсить
 url = "https://anekdoty.ru/pro-programmistov/"
@@ -42,9 +40,10 @@ def start(m):
     markup.add(item1)
     item2 = types.KeyboardButton(text="Мем")
     markup.add(item2)
-    bot.send_message(m.chat.id,
+    bot.send_message(m.from_user.id,
                      "Привет! Я бот хорошего настроения :)\nНажми: \nАнекдот - для получения анекдота\nМем - для получения мема",
                      reply_markup=markup)
+
 
 # обрабатываем ответ от пользователя
 @bot.message_handler(content_types=["text"])
@@ -52,13 +51,16 @@ def handle_text(message):
     # обрабатываем запрос на анекдот
     if message.text.strip() == "Анекдот":
         answer = random.choice(list_of_jokes)
-        bot.send_message(message.chat.id, answer)
+        bot.send_message(message.from_user.id, answer)
         list_of_jokes.remove(answer)
     elif message.text.strip() == "Мем":
+        global image_files
+        if len(image_files) == 0:
+            image_files = os.listdir(path_dir)
         random_image = random.choice(image_files)
         full_path = os.path.join(path_dir, random_image)
         with open(full_path, "rb") as f:
-            bot.send_photo(message.chat.id, f)
+            bot.send_photo(message.from_user.id, f)
             image_files.remove(random_image)
     elif message.text.strip() != "Анекдот" or message.text.strip() != "Mem":
         start(message)
