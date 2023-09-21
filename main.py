@@ -30,13 +30,14 @@ image_files = os.listdir(path_dir)
 load_dotenv()
 # Создаем бот
 bot = telebot.TeleBot(os.getenv("TOKEN"))
-# создаеи словарь, куда будем добавлять пользователей
+# создаем словарь, куда будем добавлять пользователей
 users = {}
 
 
 # создаем клавиатуру (кнопки) и преветственное сообщение
 @bot.message_handler(commands=["start"])
 def start(message):
+    # получаем идентификатор для каждого нового пользователя и сохраняем его в словарь
     user_id = message.from_user.id
     users[user_id] = []
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -81,14 +82,12 @@ def handle_text(message):
                 random_image = random.choice(image_files)
             # добавляем случйное изображение в список показанных
             users[user_id].append(random_image)
-            print(users[user_id])
             # находим путь именно до этой картинки
             full_path = os.path.join(path_dir, random_image)
             # открываем картнку
             with open(full_path, "rb") as f:
                 # отправляем её пользователю
                 bot.send_photo(message.from_user.id, f)
-            print(users)
         except KeyError:
             print('Key not found')
             bot.send_message(message.from_user.id, "нажми /start")
