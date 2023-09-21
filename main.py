@@ -9,7 +9,6 @@ from telebot import types
 
 # cтраница сайта, которую будет парсить
 url = "https://anekdoty.ru/pro-programmistov/"
-users = {}
 
 
 # parser() делает парсинг страницы и возвращает список анекдотов
@@ -27,10 +26,12 @@ path_dir = "C:\\Users\\Fujitsu\\OneDrive\\Desktop\\Мемы"
 # получаем список мемов в папке
 image_files = os.listdir(path_dir)
 # получаем токен в BotFather
-
+# выделяем токен в отдельный файл
 load_dotenv()
 # Создаем бот
 bot = telebot.TeleBot(os.getenv("TOKEN"))
+# создаеи словарь, куда будем добавлять пользователей
+users = {}
 
 
 # создаем клавиатуру (кнопки) и преветственное сообщение
@@ -47,7 +48,6 @@ def start(message):
                      "Привет! Я бот хорошего настроения :)\nНажми: \nАнекдот - "
                      "для получения анекдота\nМем - для получения мема",
                      reply_markup=markup)
-
 
 
 # обрабатываем ответ от пользователя
@@ -77,8 +77,9 @@ def handle_text(message):
             random_image = random.choice(image_files)
             # проверяем есть ли случайный анекдот в списке уже показанных
             if random_image in users[user_id]:
-                # если есть, то опять выьираем случайную картнку
+                # если есть, то опять выбираем случайную картнку
                 random_image = random.choice(image_files)
+            # добавляем случйное изображение в список показанных
             users[user_id].append(random_image)
             print(users[user_id])
             # находим путь именно до этой картинки
@@ -90,9 +91,10 @@ def handle_text(message):
             print(users)
         except KeyError:
             print('Key not found')
+            bot.send_message(message.from_user.id, "нажми /start")
 
     elif message.text.strip() != "Анекдот" or message.text.strip() != "Mem":
-        start(message)
+        bot.send_message(message.from_user.id, "Я тебя не понимаю :(  нажми /start")
 
 
 bot.polling(none_stop=True, interval=0)
