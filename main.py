@@ -1,45 +1,28 @@
-import os
-import random
-
-import requests
 import telebot
-from bs4 import BeautifulSoup as b
 from dotenv import load_dotenv
 from telebot import types
+from Clases import *
 
 # cтраница сайта, которую будет парсить
-url = "https://anekdoty.ru/pro-programmistov/"
 
 
-# parser() делает парсинг страницы и возвращает список анекдотов
-def parser(url):
-    r = requests.get(url)
-    soup = b(r.text, "html.parser")
-    anekdots = soup.find_all("div", class_="holder-body")
-    return [c.text for c in anekdots]
-
-
-# сохраняем списоок анекдотов в переменной list_of_jokes
-list_of_jokes = parser(url)
-# прописывам путь к папкк с мемами
-path_dir = "C:\\Users\\Fujitsu\\OneDrive\\Desktop\\Мемы"
 # получаем список мемов в папке
-image_files = os.listdir(path_dir)
+
 # получаем токен в BotFather
 # выделяем токен в отдельный файл
 load_dotenv()
 # Создаем бот
 bot = telebot.TeleBot(os.getenv("TOKEN"))
-# создаем словарь, куда будем добавлять пользователей
-users = {}
+
+
+# создаеи словарь, куда будем добавлять пользователей
 
 
 # создаем клавиатуру (кнопки) и преветственное сообщение
 @bot.message_handler(commands=["start"])
 def start(message):
-    # получаем идентификатор для каждого нового пользователя и сохраняем его в словарь
     user_id = message.from_user.id
-    users[user_id] = []
+    TanyaBot.users[user_id] = []
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton(text="Анекдот")
     markup.add(item1)
@@ -61,33 +44,31 @@ def handle_text(message):
 
         # проверяем не пуст ли наш список анекдотов, усли пуст - опять получаем его
         # со страницы с анекдотами
-        global list_of_jokes
-        if len(list_of_jokes) == 0:
-            list_of_jokes = parser(url)
-        # получаем случайный анекдот из списка
-        answer = random.choice(list_of_jokes)
         # отправляем его пользователю
+        answer = TanyaBot.get_joke(user_id)
         bot.send_message(message.from_user.id, answer)
         # для того, чтобы анекдоты не повторялись, отправленный анекдот удаляем из списка анекдотов
-        list_of_jokes.remove(answer)
+
     # обрабатываем запрос на мем
     elif message.text.strip() == "Мем":
 
         try:
             # получаем случайныую картинку из списка
-            random_image = random.choice(image_files)
+            random_image = TanyaBot.get_mem(user_id)
             # проверяем есть ли случайный анекдот в списке уже показанных
-            if random_image in users[user_id]:
+            if random_image in TanyaBot.users[user_id]:
                 # если есть, то опять выбираем случайную картнку
-                random_image = random.choice(image_files)
+                random_image = TanyaBot.get_mem(user_id)
             # добавляем случйное изображение в список показанных
-            users[user_id].append(random_image)
+            TanyaBot.users[user_id].append(random_image)
+            print(TanyaBot.users[user_id])
             # находим путь именно до этой картинки
-            full_path = os.path.join(path_dir, random_image)
+            full_path = os.path.join(PATH_DIR, random_image)
             # открываем картнку
             with open(full_path, "rb") as f:
                 # отправляем её пользователю
                 bot.send_photo(message.from_user.id, f)
+            print(TanyaBot.users)
         except KeyError:
             print('Key not found')
             bot.send_message(message.from_user.id, "нажми /start")
