@@ -36,10 +36,11 @@ def handle_text(message):
     if message.text.strip() == "Анекдот":
         try:
             answer = TanyaBot.get_joke()
+            # проверяем есть ли случайный анекдот в списке уже показанных
             if answer in TanyaBot.users_joke[user_id]:
-                # если есть, то опять выбираем случайную картнку
+                # если есть, то опять выбираем случайный анекдот
                 answer = TanyaBot.get_joke()
-            # добавляем случйное изображение в список показанных
+            # добавляем сслучайный анекдот в список показанных
             TanyaBot.users_joke[user_id].append(answer)
             print(TanyaBot.users_joke[user_id])
             bot.send_message(message.from_user.id, answer)
@@ -47,7 +48,7 @@ def handle_text(message):
         except KeyError:
             print('Key not found')
             bot.send_message(message.from_user.id, "нажми /start")
-        # для того, чтобы анекдоты не повторялись, отправленный анекдот удаляем из списка анекдотов
+
 
     # обрабатываем запрос на мем
     elif message.text.strip() == "Мем":
@@ -55,11 +56,11 @@ def handle_text(message):
         try:
             # получаем случайныую картинку из списка
             random_image = TanyaBot.get_mem()
-            # проверяем есть ли случайный анекдот в списке уже показанных
+            # проверяем есть ли случайная картинка в списке уже показанных
             if random_image in TanyaBot.users_mem[user_id]:
                 # если есть, то опять выбираем случайную картнку
                 random_image = TanyaBot.get_mem()
-            # добавляем случйное изображение в список показанных
+            # добавляем случайную картинку в список показанных
             TanyaBot.users_mem[user_id].append(random_image)
             print(TanyaBot.users_mem[user_id])
             # находим путь именно до этой картинки

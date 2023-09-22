@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as b
 
 # cтраница сайта, которую будет парсить
 URL = "https://anekdoty.ru/pro-programmistov/"
-# прописывам путь к папкк с мемами
+# прописывам путь к папке с мемами
 PATH_DIR = "C:\\Users\\Fujitsu\\OneDrive\\Desktop\\Мемы"
 
 
