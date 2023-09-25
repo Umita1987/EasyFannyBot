@@ -11,7 +11,7 @@ PATH_DIR = "C:\\Users\\Fujitsu\\OneDrive\\Desktop\\Мемы"
 
 
 # адрес страницы и путь к папке - константы
-class TanyaBot:
+class EasyFannyBot:
     # создаеи словари, куда будем добавлять пользователей
     users_mem = {}
     users_joke = {}
@@ -25,7 +25,7 @@ class TanyaBot:
 
     @staticmethod
     def get_joke():
-        list_of_jokes = TanyaBot.get_anekdots()
+        list_of_jokes = EasyFannyBot.get_anekdots()
         answer = random.choice(list_of_jokes)
         return answer
 

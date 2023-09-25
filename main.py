@@ -15,8 +15,8 @@ bot = telebot.TeleBot(os.getenv("TOKEN"))
 @bot.message_handler(commands=["start"])
 def start(message):
     user_id = message.from_user.id
-    TanyaBot.users_mem[user_id] = []
-    TanyaBot.users_joke[user_id] = []
+    EasyFannyBot.users_mem[user_id] = []
+    EasyFannyBot.users_joke[user_id] = []
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton(text="Анекдот")
     markup.add(item1)
@@ -35,16 +35,16 @@ def handle_text(message):
     # обрабатываем запрос на анекдот
     if message.text.strip() == "Анекдот":
         try:
-            answer = TanyaBot.get_joke()
+            answer = EasyFannyBot.get_joke()
             # проверяем есть ли случайный анекдот в списке уже показанных
-            if answer in TanyaBot.users_joke[user_id]:
+            if answer in EasyFannyBot.users_joke[user_id]:
                 # если есть, то опять выбираем случайный анекдот
-                answer = TanyaBot.get_joke()
+                answer = EasyFannyBot.get_joke()
             # добавляем сслучайный анекдот в список показанных
-            TanyaBot.users_joke[user_id].append(answer)
-            print(TanyaBot.users_joke[user_id])
+            EasyFannyBot.users_joke[user_id].append(answer)
+            print(EasyFannyBot.users_joke[user_id])
             bot.send_message(message.from_user.id, answer)
-            print(TanyaBot.users_joke)
+            print(EasyFannyBot.users_joke)
         except KeyError:
             print('Key not found')
             bot.send_message(message.from_user.id, "нажми /start")
@@ -55,21 +55,21 @@ def handle_text(message):
 
         try:
             # получаем случайныую картинку из списка
-            random_image = TanyaBot.get_mem()
+            random_image = EasyFannyBot.get_mem()
             # проверяем есть ли случайная картинка в списке уже показанных
-            if random_image in TanyaBot.users_mem[user_id]:
+            if random_image in EasyFannyBot.users_mem[user_id]:
                 # если есть, то опять выбираем случайную картнку
-                random_image = TanyaBot.get_mem()
+                random_image = EasyFannyBot.get_mem()
             # добавляем случайную картинку в список показанных
-            TanyaBot.users_mem[user_id].append(random_image)
-            print(TanyaBot.users_mem[user_id])
+            EasyFannyBot.users_mem[user_id].append(random_image)
+            print(EasyFannyBot.users_mem[user_id])
             # находим путь именно до этой картинки
             full_path = os.path.join(PATH_DIR, random_image)
             # открываем картнку
             with open(full_path, "rb") as f:
                 # отправляем её пользователю
                 bot.send_photo(message.from_user.id, f)
-            print(TanyaBot.users_mem)
+            print(EasyFannyBot.users_mem)
         except KeyError:
             print('Key not found')
             bot.send_message(message.from_user.id, "нажми /start")
